@@ -1,0 +1,463 @@
+Technique 1 Creating a repository: git init
+	git init GitInPracticeRedux
+	git init --help
+	find GitInPracticeRedux
+	
+	git config --global user.name "Mike McQuaid"
+	git config --global user.email mike@mikemcquaid.com
+	git config --global user.email
+	
+	git config --help
+	git init --help
+	git status --help
+	
+Technique 2 Building a new commit in the index staging area: git add
+	git add GitInPractice.asciidoc - can also be passed directories as arguments instead of files
+	git status
+	
+Technique 3 Committing changes to files: git commit
+	git commit --message(-m) 'Initial commit of book.'
+
+Technique 4 Viewing history: git log, gitk, gitx
+	git log
+	git log --patch
+	git log --stat
+	git log --word-diff
+	gitk
+	
+Technique 5 Viewing the differences between commits: git diff
+	git diff master~1 master
+	git diff master~1 master -- GitInPractice.asciidoc - shows only the differences to the GitInPractice.asciidoc file between the previous and latest commits.
+	git diff - without an argument displays the differences between the current working directory and the index staging area
+	git diff master   - displays the differences between the current working directory and the last commit on the default master branch.
+	
+	git diff --stat master~1 master
+	
+	master~1, master^, HEAD~1, HEAD^, master^^ is equivalent to master~2
+	
+Technique 6 Adding a remote repository: git remote add
+	 git remote add origin https://github.com/tomasbalaz/git-in-practice.git
+	 git remote --verbose
+	 
+Technique 7 Pushing changes to a remote repository: git push
+	git push --set-upstream origin master
+	git push -u origin master
+	git push --all pushes all branches and tags
+	git push --force disables some checks on the remote repository to allow rewriting of history.
+	
+Technique 8 Cloning a remote/GitHub repository onto your local machine: git clone
+	git clone https://github.com/GitInPractice/GitInPracticeRedux.git
+	git remote --verbose
+	
+Technique 9 Pulling changes from another repository: git pull
+	git pull
+	git pull --rebase
+	
+Technique 10 Fetching changes from a remote without modifying local branches: git fetch
+	git fetch
+	
+Technique 11 Creating a new local branch from the current branch: git branch
+	git branch
+	git branch chapter-two 
+	git branch chapter-two is the equivalent of git branch chapter-two master if you’re already on the master branch.
+	git branch chapter-two --track
+	
+Technique 12 Checking out a local branch: git checkout
+	git checkout chapter-two
+	git checkout --force
+	
+Technique 13 Pushing a local branch remotely
+	git push --set-upstream origin chapter-two
+	
+Technique 14 Merging an existing branch into the current branch: git merge
+	git checkout chapter-two
+	Modify the contents of GitInPractice.asciidoc, and run git add GitInPractice .asciidoc.
+	git commit --message 'Start Chapter 2.'.
+	git checkout master
+	git merge chapter-two
+	
+Technique 15 Deleting a remote branch
+	git checkout master
+	git push
+	git push --delete origin chapter-two
+	
+Technique 16 Deleting the current local branch after merging
+	git checkout master
+	git branch --delete chapter-two
+	
+Technique 17 Renaming or moving a file: git mv
+	git mv GitInPractice.asciidoc 01-IntroducingGitInPractice.asciidoc.
+	git commit --message 'Rename book file to first part file.'
+	git mv --force - Git overwrite whatever file is at the destination.
+	
+Technique 18 Removing a file: git rm
+	echo Git Sandwich > GitInPracticeReviews.tmp
+	git add GitInPracticeReviews.tmp
+	git commit --message 'Add review temporary file.'
+	if git add fails, you may have *.tmp in a .gitignore file somewhere. In this case, add it using git add --force GitInPractice- Reviews.tmp.
+	
+	git rm GitInPracticeReviews.tmp
+	git commit --message 'Remove unfavourable review file.'
+	git rm -n (or --dry-run) - simulated run of git rm
+	git rm -r - remove a directory and all the unignored files and subdirectories within it,
+	git rm -f (or --force) - If a file has uncommitted changes
+	
+Technique 19 Resetting files to the last commit: git reset
+	echo EXTRA >> 01-IntroducingGitInPractice.asciidoc
+	git reset --hard - reset both the index staging area and the working directory to the state of the previous commit on this branch.
+	git reset (git reset --mixed) - resets the index staging area but not the contents of the working directory - 
+		In short, git reset --mixed only undoes git add, but git reset --hard undoes git add and all file modifications.
+
+Technique 20 Deleting untracked files: git clean
+	echo Needs more cowbell > GitInPracticeIdeas.tmp
+	git clean --force.
+	git clean -n (or --dry-run)
+	git clean -d - remove untracked directories
+	
+	git ls-files - files that are currently tracked
+	git ls-files --others (or -o) - currently untracked files
+	
+Technique 21 Ignoring files: .gitignore
+	https://github.com/github/gitignore
+	git help gitignore
+	echo \*.tmp > .gitignore
+	touch GitInPracticeGoodIdeas.tmp
+	git add GitInPracticeGoodIdeas.tmp
+
+Technique 22 Deleting ignored files
+	touch GitInPracticeFunnyJokes.tmp GitInPracticeWittyBanter.tmp
+	git clean --force -X - remove only ignored files from the working directory
+	git clean -x - remove ignored files and all the untracked files
+	
+Technique 23 Temporarily stashing some changes: git stash
+	echo EXTRA >> 01-IntroducingGitInPractice.asiidoc
+	git stash save = git stash - creates a temporary commit with a prepopulated commit message and then returns your current branch to the state before the temporary commit was made.
+	git stash list
+	
+Technique 24 Reapplying stashed changes: git stash pop
+	git stash pop
+	git stash apply - applies the stash to the working tree as git stash pop does but keeps the top stack stash on the stack
+
+Technique 25 Clearing stashed changes: git stash clear
+	git stash clear - Cleared stashes can’t be easily recovered!
+
+Technique 26 Assuming files are unchanged
+	git update-index --assume-unchanged 01-IntroducingGitInPractice.asiidocGit will ignore any changes made to 01-IntroducingGitInPractice.asciidoc. 
+	
+Technique 27 Listing assumed-unchanged files
+	git ls-files -v
+	git ls-files --help
+	
+Technique 28 Stopping assuming files are unchanged
+	git update-index --no-assume-unchanged 01-IntroducingGitInPractice.asiidoc
+	git ls-files -v | grep 01-IntroducingGitInPractice.asiidoc
+
+Technique 29 Listing only certain commits
+	git log --author "Tomas Balaz" --after "Nov 15 2019"
+	git log --author "Tomas Balaz" --after "Nov 15 2019" --grep 'file\.'
+	
+	Git recognizes, such as Nov 10 2013, 2014-01-30, midnight, or yesterday
+	--max-count (or -n)
+	--reverse
+	--before (or --until)
+	--after
+	--merges flag (or --min-parents=2)
+
+Technique 30 Listing commits with different formatting
+	git log --format=email --reverse --max-count 2
+	--patch (or -p) - include the changes made in the commit
+	git log --max-count 2 --date=relative
+	git log --max-count 2 --date=short
+	raw, local, and default formats are also available
+	git log --max-count 2 --pretty
+	git log --max-count 2 --format=medium - default
+	git log --max-count 2 --format=oneline
+	git log --max-count 2 --format=short
+	git log --max-count 2 --format=full
+	git log --max-count 2 --format=fuller
+	git log --max-count 2 --format=raw
+	
+	Custom output format
+	git log --format="%ar %an did: %s"
+		%ar is the relative format date on which the commit was authored.
+		%an is the name of the author of the commit.
+		did: is text that’s displayed the same in every commit and isn’t a placeholder.
+		%s is the commit message subject (the first line).
+		
+	Releasing logs: git shortlog
+		git shortlog
+	
+	The ultimate log output
+		git log --oneline --graph --decorate
+		
+Technique 31 Showing who last changed each line of a file: git blame
+	 git blame --date=short 01-IntroducingGitInPractice.asiidoc
+	 --show-email (or -e) - show the email address of the author instead of the name.
+	 -w -  ignore whitespace changes when finding where the line changes came from.
+	 -s - hides the author name and date in the output (and takes precedence over --show-email/-e).
+	 -L - line range—for example, -L 40,60—
+	 
+Technique 32 Finding which commit caused a particular bug: git bisect
+	git bisect start / git bisect start src/gui - contents of this directory will be checked, which makes things even faster.
+	git bisect bad
+	git bisect good 6576b6 - 6576b6 is the SHA-1 of any commit that you know was before the rename.
+	When the .asciidoc file is named GitInPractice.asciidoc, run git bisect good to indicate that the file hasn’t been renamed yet.
+	When the .asciidoc file is named 01-IntroducingGitInPractice.asciidoc, run git bisect bad to indicate that the file has been renamed.
+	
+	git bisect log
+	git bisect reset.
+	
+	Automating git bisect
+		git bisect start
+		git bisect bad
+		git bisect good 6576b6
+		git bisect run ls GitInPractice.asciidoc
+
+Technique 33 Merging branches and always creating a merge commit
+	git checkout -b chapter-spacing
+	"Make some change"
+	git commit --message 'Add spacing between chapters'
+	git merge --no-ff chapter-spacing
+	git branch --delete chapter-spacing
+	git merge --ff-only - opposite of no-ff: it ensures that a merge commit is never created.
+	
+	git merge --strategy=recursive - default merge strategy
+	
+	Merge strategies : 
+		recursive - default 
+		octopus - Merges multiple branches at once but fails on a merge conflict.
+		ours - Performs a normal merge but ignores all the changes from the incoming branch.
+		subtree - A modified version of the recursive strategy that detects whether the tree structures are at different levels and adjusts them if needed.
+	
+	Some useful merge strategy options for a RECURSIVE merge
+		ours — Automatically solves any merge conflicts by always selecting the previous version from the current branch
+		theirs — The reverse of ours.
+		patience — Uses a slightly more expensive git diff algorithm to try to decrease the chance of a merge conflict.
+		ignore-all-space - Ignores whitespace when selecting which version should be chosen in case of a merge conflict.
+		
+	Using a graphical merge tool - git mergetool(git help mergetool)
+		merge, gvimdiff, kdiff3, meld, vimdiff, opendiff, or tortoisemerge
+	
+Technique 35 Resolving each merge conflict only once: git rerere
+	git config --global --add rerere.enabled 1
+	git rerere forget 01-IntroducingGitInPractice.asciidoc
+	
+Technique 36 Creating a tag: git tag
+	git checkout master
+	git tag v0.1
+	git tag
+	git tag --list v0.* - flag lists all the tags that match a given pattern.
+	git tag --force - flag updates a tag to point to the new commit.
+	git tag --delete - flag deletes a tag
+	
+	git push --tags
+	
+Technique 37 Generating a version number based on previous tags: git describe
+	git describe --tags
+	git describe --tags v0.1 - outputs v0.1
+	git describe --tags 0a5e328 - outputs v0.1-1-g0a5e328
+	git describe --tags --long v0.1 - outputs v0.1-0-g725c33a
+	git describe --tags --abbrev=5 - outputs v0.1-1-g0a5e3.
+	
+Technique 38 Adding a single commit to the current branch: git cherry-pick
+	git checkout -b v0.1-release v0.1.
+	Change something in the file
+	git commit --message 'Advanced practice technique.'
+	git checkout master
+	git cherry-pick v0.1-release (git cherry-pick dfe2377) - dfe2377 is the most recent commit on the v0.1-release branch)
+	
+	git cherry-pick can take various flags:
+		cherry-pick --edit - prompts you for a commit message before committing.
+		cherry-pick --signoff (or -s) - appends a Signed-off-by line to the end of the commit message. (Signed-off-by: Mike McQuaid <mike@mikemcquaid.com>)
+		cherry-pick --continue
+		cherry-pick --abort
+		
+Technique 39 Reverting a previous commit: git revert
+	git checkout master.
+	git revert <sha-commit>
+	git revert --signoff (or -s) - appends a Signed-off-by line to the end of the commit message. (Signed-off-by: Mike McQuaid <mike@mikemcquaid.com>)
+	
+Technique 40 Listing what branches contain a commit: git cherry
+	git checkout v0.1-release
+	Change something in the file
+	git commit --message 'Add release preface.'
+	git cherry --verbose master.
+	
+Technique 41 Listing all changes including history rewrites: git reflog
+	git checkout master
+	git reflog (git log --walk-reflogs --abbrev-commit --pretty =oneline)
+	git reflog master --max-count
+	git reflog master --patch
+	
+Technique 42 Resetting a branch to a previous commit: git reset
+	git checkout master
+	Edit 00-Preface.asciidoc, and make a change to the file
+	git commit --message="Update preface." 01-IntroducingGitInPractice.asiidoc
+	git reset HEAD^
+	git reflog HEAD
+	git reset 445
+	
+	git reset HEAD^ -- 00-Preface.asciidoc - ????
+	git reset --soft HEAD^ - resets neither the staging area nor the working tree but just 
+	changes the HEAD pointer to point to the previous commit.
+	
+Technique 43 Rebasing commits on top of another branch: git rebase
+	git checkout -b inspiration v0.1.
+	Edit 00-Preface.asciidoc, and make a change to the file
+	git commit --message="Add Chapter 1 inspiration." 01-IntroducingGitInPractice.asiidoc
+	git rebase v0.1-release
+	git reflog
+	
+	git branch --force inspiration <COMMIT-ID before REBASE> - reset the inspiration branch pointer to point back to the existing commit, essentially undoing the rebase.
+	
+	rebase conflict :
+	git rebase --continue - continues the rebase operation by rebasing any further commits and, 
+							if successful, updating the rebased branch.
+							
+	git rebase --skip - the commit is skipped and the next one is applied instead
+	
+	git rebase --abort - rebase process altogether and returns the branch to its state before the rebase was attempted
+	
+Technique 44 Rebasing commits interactively: git rebase - - interactive	
+	git checkout inspiration
+	git rebase --interactive v0.1
+	
+Technique 45 Pulling a branch and rebasing commits: git pull --rebase
+	Make some changes in another git repo on master branch.
+	Push this changes into origin/master
+	
+	On original git repo git checkout master
+	Edit 00-Preface.asciidoc, and make a change to the file
+	git commit --message="Chapter 2: only one chapter."
+	On original git repo run git pull --rebase
+	
+	git pull = git fetch && git merge
+	git pull --rebase = git fetch && git rebase.
+	git fetch && git rebase origin/master
+	
+Technique 46 Rewriting history on a remote branch: git push - -force
+	git checkout inspiration
+	git pull --rebase
+	git push origin +inspiration (git push --force = accidentally force-push multiple branches at once.)
+	
+Technique 47 Rewriting the entire history of a branch: git filter-branch
+
+
+Technique 48 Setting the configuration for all repositories
+	git config --global user.name "Mike McQuaid"
+	
+	cat ~/.gitconfig
+	
+	git config --global --unset rerere.enabled
+	
+Technique 49 Setting the configuration for a single repository
+	git config user.email mike.mcquaid@github.com
+	git config --local user.email
+	
+	cat .git/config
+
+four different flags to affect the location of the configuration file : 
+	--global—Uses the ~/.gitconfig file in your $HOME directory. For example, if
+		your $HOME was /Users/mike, then the global file would be at /Users/mike/
+		.gitconfig.
+ 
+	--system—Uses the etc/gitconfig file under wherever Git was installed. For
+		example, if Git was installed into /usr/local/, the system file would be at /usr/
+		local/etc/gitconfig; or if installed into /usr/, the system file would be at /etc/
+		gitconfig.
+
+	--local—Uses the .git/config file in a Git repository. For example, if a Git
+		repository was at /Users/mike/GitInPracticeRedux/.git, then the local file
+		would be at /Users/mike/GitInPracticeRedux/.git/config. .git/config is the
+		default if no other configuration location flags are provided.
+
+	 --file (or -f)—Takes another argument to specify a file path to write to. For
+		example, you could specify a file using git config --file /Users/mike/
+		Documents/git.cfg.
+		
+Technique 50 Aliasing commands
+	git config alias.ultimate-log "log --graph --oneline --decorate"
+	git config --global alias.l '!git ultimate-log'
+	
+Technique 51 Showing the current branch in your terminal prompt
+	
+
+Technique 52 Adding a git submodule: git submodule add
+	git checkout master
+	git submodule add https://github.com/GitInPractice/GitInPracticeReduxSubmodule.git submodule
+	
+	--quiet (-q)—Makes git submodule add only print out error messages and no
+		status information.
+	--force (-f)—Lets you add a submodule path that would otherwise be ignored
+		by .gitignore rules.
+	--depth—Passed to the git clone of the submodule to let you create a shallow
+		clone containing only the requested number of revisions. This can be used to
+		shrink the size of the submodule on disk. This flag for git clone was mentioned
+		previously in technique 8 and can be useful for reducing the clone time
+		for very large repositories.
+		
+Technique 53 Showing the status of submodules: git submodule status
+	git submodule status
+	git submodule --recursive - runs git submodule status in each of the submodules directories too.
+	
+Technique 54 Updating and initializing all submodules: git submodule update - - init
+	git submodule update --init
+	
+	git submodule update can take some parameters to customize its behavior:
+
+	--recursive—Runs git submodule update --init in each of the submodules
+		directories. This is useful when there are nested submodules inside submodules.
+	--no-fetch—Attempts to update the submodule without running git fetch.
+		This updates the submodule to a later revision only if it has already been
+		fetched. This is useful if you want to fetch the changes to a submodule now and
+		then update and test this update at a later point.
+	--force (-f)—Updates the submodules to the latest revision by running the
+		equivalent of git checkout --force to discard any uncommitted changes made
+		to the submodules.
+	--depth—Passed to the git clone of the submodule to let you create a shallow
+		clone containing only the requested num
+	
+	git clone --recursive-submodules - clone it and all the necessary submodules (and the submodules of the submodules, if they exist).
+
+Technique 55 Running a command in every submodule: git submodule foreach
+	git submodule foreach 'echo $name: $toplevel:$path [$sha1]'
+	
+	git submodule foreach can take the following flags:
+	--quiet—Only prints command output, not the “Entering submodule” message,
+		as it runs on each submodule
+	--recursive—Iterates
+	
+Working with Subversion - SKIPPED !!!
+	
+Technique 59 Making a pull request in the same repository: gh pull-request
+	git checkout -b pr-test master
+	git commit 00-Preface.asciidoc
+	git push --set-upstream origin pr-test
+	gh pull-request
+	
+Technique 60 Making a pull request from a forked repository: gh fork
+	cd /Users/mike/GitInPracticeRedux/
+	gh fork
+	git checkout -b credits
+	git commit 01-IntroducingGitInPractice.asciidoc
+	git push --set-upstream origin credits
+	gh pull-request
+
+Technique 61 Merging a pull request from the same repository
+	git checkout master
+	git fetch
+	git merge --no-ff origin/pr-test
+	git push
+	git push --delete origin pr-test
+	
+Technique 62 Merging a pull request from a forked repository: gh merge
+	git checkout master
+	gh merge https://github.com/GitInPractice/GitInPracticeRedux/pull/2
+	git push
+
+Hosting a repository - SKIPPED !!!
+
+
+	
+	
+
